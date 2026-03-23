@@ -10,6 +10,7 @@ class MarketProfileBuilder:
     """
     
     def __init__(self, cleaned_data_path):
+        self.base_dir = Path(__file__).resolve().parent
         self.df = pd.read_csv(cleaned_data_path)
         self.profile = {}
         
@@ -110,12 +111,14 @@ class MarketProfileBuilder:
         
         return self
     
-    def save_profile(self, output_path='../data/market_profile.json'):
+    def save_profile(self, output_path=None):
         """Save profile to JSON"""
+        if output_path is None:
+            output_path = self.base_dir.parent / 'data' / 'market_profile.json'
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(self.profile, f, indent=2)
         
         print(f"\n✓ Saved market profile to: {output_path}")
@@ -143,7 +146,9 @@ class MarketProfileBuilder:
             matrix.append(row)
         
         matrix_df = pd.DataFrame(matrix)
-        matrix_df.to_csv('../data/processed/skill_role_matrix.csv', index=False)
+        output_path = self.base_dir.parent / 'data' / 'processed' / 'skill_role_matrix.csv'
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        matrix_df.to_csv(output_path, index=False)
         print("✓ Saved skill-role matrix")
         return matrix_df
     
@@ -159,9 +164,11 @@ class MarketProfileBuilder:
 # Main execution
 if __name__ == "__main__":
     import sys
+    base_dir = Path(__file__).resolve().parent
+    processed_dir = base_dir.parent / "data" / "processed"
     
     # Find cleaned data
-    cleaned_files = list(Path("../data/processed").glob("*cleaned*.csv"))
+    cleaned_files = list(processed_dir.glob("*cleaned*.csv"))
     if not cleaned_files:
         print("No cleaned data found. Run data_cleaning.py first")
         sys.exit(1)
