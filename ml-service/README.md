@@ -162,10 +162,7 @@ Endpoints:
     - `role` (optional, e.g. `ML Intern`)
     - `profile_path` (optional path to `market_profile.json`)
 
-## Africa-focused scraping notes
-
-- LinkedIn scraper now prioritizes African countries and filters job locations to Africa-related city/country keywords.
-- Required vs preferred skills are now classified using stronger section/indicator heuristics to reduce noisy labeling.
+## Scraping notes
 
 Run:
 
@@ -175,4 +172,4 @@ python ml-service/src/scrapers/run_scrapers.py
 
 Output:
 
-- `ml-service/data/raw/linkedin_internships_africa.csv`
+- `ml-service/data/raw/linkedin_internships.csv`
