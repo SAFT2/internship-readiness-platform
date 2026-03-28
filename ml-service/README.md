@@ -110,7 +110,7 @@ Batch test parsing across resume samples:
 python ml-service/src/test_resume_parsing.py --input-dir path/to/resume_pdfs --role "ML Intern"
 ```
 
-## Feature engineering (Phase 3)
+## Feature engineering
 
 Input profile schema (`CSV` or `JSON`):
 
@@ -127,13 +127,13 @@ Build features:
 python ml-service/src/build_student_features.py --input path/to/student_profiles.csv --output ml-service/data/processed/student_features.csv
 ```
 
-## Synthetic training data (Phase 6.1)
+## Synthetic training data 
 
 ```powershell
 python ml-service/src/generate_synthetic_training_data.py --size 1000
 ```
 
-Then train model (Phase 6.2):
+Then train model:
 
 ```powershell
 python ml-service/src/readiness_model.py --dataset ml-service/data/processed/synthetic_training_data.csv
