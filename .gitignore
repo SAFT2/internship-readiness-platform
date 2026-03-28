@@ -1,2 +1,16 @@
 data/
 ml-service/src/scrapers/__pycache__/
+
+# Python cache and compiled files
+**/__pycache__/
+*.py[cod]
+
+# Legacy duplicate data directory (do not use)
+ml-service/src/data/
+ml-service/src/scrapers/*.csv
+
+# Generated ML-service artifacts
+ml-service/data/processed/*.csv
+ml-service/data/models/
+ml-service/data/raw/*.csv
+ml-service/data/processed/*.json

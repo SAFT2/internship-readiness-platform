@@ -9,6 +9,7 @@ import time
 import csv
 import re
 import json
+from pathlib import Path
 
 # ==================== CONFIG ====================
 
@@ -469,20 +470,22 @@ def save_to_csv(jobs, filename=None):
         print("No jobs to save")
         return None
     
+    base_dir = Path(__file__).resolve().parents[2] / "data" / "raw"
+    base_dir.mkdir(parents=True, exist_ok=True)
+
     if filename is None:
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"data/internships_linkedin_{timestamp}.csv"
-    
-    # Ensure data directory exists
-    import os
-    os.makedirs('data', exist_ok=True)
-    
-    with open(filename, 'w', newline='', encoding='utf-8') as f:
+        output_path = base_dir / f"internships_linkedin_{timestamp}.csv"
+    else:
+        candidate = Path(filename)
+        output_path = candidate if candidate.is_absolute() else base_dir / candidate.name
+
+    with open(output_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=jobs[0].keys())
         writer.writeheader()
         writer.writerows(jobs)
-    
-    return filename
+
+    return str(output_path)
 
 
 # ==================== RUN ====================

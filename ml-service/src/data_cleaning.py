@@ -15,6 +15,7 @@ class InternshipDataCleaner:
     """
     
     def __init__(self, input_path):
+        self.base_dir = Path(__file__).resolve().parent
         self.input_path = Path(input_path)
         self.df = None
         self.cleaned_df = None
@@ -411,8 +412,10 @@ class InternshipDataCleaner:
         
         return self
     
-    def save_cleaned_data(self, output_dir='../data/processed'):
+    def save_cleaned_data(self, output_dir=None):
         """Save cleaned data to CSV"""
+        if output_dir is None:
+            output_dir = self.base_dir.parent / 'data' / 'processed'
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -495,9 +498,10 @@ class InternshipDataCleaner:
 # Main execution
 if __name__ == "__main__":
     import sys
+    base_dir = Path(__file__).resolve().parent
     
     # Find the most recent raw file
-    raw_dir = Path("../data/raw")
+    raw_dir = base_dir.parent / "data" / "raw"
     csv_files = list(raw_dir.glob("*.csv"))
     
     if not csv_files:
