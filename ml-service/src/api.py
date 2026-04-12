@@ -17,6 +17,8 @@ class ProfileAssessmentRequest(BaseModel):
     candidate_years: float = 0.0
     projects_count: int = 0
     experience_type: str = "none"
+    project_quality_score: float | None = None
+    project_relevance_score: float | None = None
     profile_path: str | None = None
 
 
@@ -128,6 +130,8 @@ def assess_profile(payload: ProfileAssessmentRequest):
             candidate_years=payload.candidate_years,
             projects_count=payload.projects_count,
             experience_type=payload.experience_type,
+            project_quality_score=payload.project_quality_score,
+            project_relevance_score=payload.project_relevance_score,
         )
         return result
     except FileNotFoundError as exc:

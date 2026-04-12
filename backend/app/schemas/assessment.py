@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class AssessmentResumeMetadata(BaseModel):
@@ -92,3 +92,7 @@ class AssessmentBenchmarkResponse(BaseModel):
     required_skill_coverage_pct: float
     market_new_grad_friendly_percentage: float | None
     market_remote_percentage: float | None
+
+
+class ProfileAssessmentRequest(BaseModel):
+    role: str | None = Field(default=None, min_length=2, max_length=120)

@@ -30,6 +30,7 @@ Main website backend for user auth, profile management, and assessment history.
 - `GET /api/v1/assessments/benchmark`
 - `GET /api/v1/dashboard/summary`
 - `GET /api/v1/dashboard/trend` (chart-ready trend points)
+- `GET /api/v1/dashboard/report.pdf` (backend-generated PDF summary report)
 
 ### Query examples
 

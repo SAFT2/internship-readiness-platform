@@ -51,6 +51,14 @@ class ReadinessAssessor:
             return 0.0
         return max(0.0, min(1.0, numerator / denominator))
 
+    @staticmethod
+    def _clamp_01(value):
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return 0.0
+        return max(0.0, min(1.0, numeric))
+
     def _score_required_skills(self, candidate_skills, role_data):
         required_frequency = role_data.get("required_skill_frequency", {})
         if not required_frequency:
@@ -99,14 +107,31 @@ class ReadinessAssessor:
         score = coverage * 10
         return round(score, 2), round(coverage, 4), matched
 
-    def _score_projects(self, projects_count):
+    def _score_projects(
+        self,
+        projects_count,
+        project_quality_score=None,
+        project_relevance_score=None,
+    ):
         if projects_count <= 0:
             return 0.0
+
+        # Base score rewards project count, while quality/relevance refine the final result.
         if projects_count == 1:
-            return 12.0
-        if projects_count == 2:
-            return 20.0
-        return 30.0
+            base_score = 10.0
+        elif projects_count == 2:
+            base_score = 17.0
+        else:
+            base_score = 22.0
+
+        quality = self._clamp_01(0.4 if project_quality_score is None else project_quality_score)
+        relevance = self._clamp_01(0.4 if project_relevance_score is None else project_relevance_score)
+
+        quality_bonus = quality * 5.0
+        relevance_bonus = relevance * 3.0
+        synergy_bonus = 2.0 if quality >= 0.65 and relevance >= 0.65 else 0.0
+
+        return round(min(30.0, base_score + quality_bonus + relevance_bonus + synergy_bonus), 2)
 
     def _score_experience(self, experience_type, candidate_years):
         experience_map = {
@@ -159,6 +184,8 @@ class ReadinessAssessor:
         candidate_years=0,
         projects_count=0,
         experience_type="none",
+        project_quality_score=None,
+        project_relevance_score=None,
     ):
         if target_role not in self.market_profile:
             available_roles = sorted(self.market_profile.keys())
@@ -178,7 +205,11 @@ class ReadinessAssessor:
             role_data,
         )
         skill_score = round(required_score + preferred_score, 2)
-        projects_score = self._score_projects(projects_count)
+        projects_score = self._score_projects(
+            projects_count,
+            project_quality_score=project_quality_score,
+            project_relevance_score=project_relevance_score,
+        )
         experience_score = self._score_experience(experience_type, candidate_years)
 
         overall_score = round(skill_score + projects_score + experience_score, 2)
@@ -192,6 +223,12 @@ class ReadinessAssessor:
             "preferred_skill_coverage": preferred_coverage,
             "projects_count": int(projects_count),
             "candidate_years": float(candidate_years),
+            "project_quality_score": self._clamp_01(project_quality_score)
+            if project_quality_score is not None
+            else None,
+            "project_relevance_score": self._clamp_01(project_relevance_score)
+            if project_relevance_score is not None
+            else None,
         }
 
         return {
