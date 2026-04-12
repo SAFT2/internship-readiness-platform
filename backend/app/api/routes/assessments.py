@@ -12,6 +12,7 @@ from app.schemas.assessment import (
     AssessmentBenchmarkResponse,
     AssessmentHistoryItem,
     AssessmentHistoryPageResponse,
+    ProfileAssessmentRequest,
     AssessmentResumeMetadata,
     AssessmentResponse,
     RoleDetailsResponse,
@@ -138,6 +139,7 @@ def create_assessment_from_resume(
 
 @router.post("/from-profile", response_model=AssessmentResponse)
 def create_assessment_from_profile(
+    payload: ProfileAssessmentRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> AssessmentResponse:
@@ -149,21 +151,31 @@ def create_assessment_from_profile(
     if not candidate_skills:
         raise HTTPException(status_code=400, detail="Profile has no skills. Update profile first.")
 
+    selected_role = payload.role.strip() if payload.role and payload.role.strip() else profile.target_role.strip()
+    if len(selected_role) < 2:
+        raise HTTPException(status_code=400, detail="Target role is required. Update profile or choose a role.")
+
+    experience_type = profile.experience_type.strip().lower() if profile.experience_type else "none"
+    if experience_type not in {"none", "internship", "part-time", "full-time"}:
+        experience_type = "none"
+
     client = MLServiceClient()
     try:
         assessment = client.assess_profile(
-            target_role=profile.target_role,
+            target_role=selected_role,
             candidate_skills=candidate_skills,
             candidate_years=profile.candidate_years,
             projects_count=profile.projects_count,
-            experience_type=profile.experience_type,
+            experience_type=experience_type,
         )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"ML service request failed: {exc}") from exc
 
     row = Assessment(
         user_id=current_user.id,
-        target_role=assessment.get("target_role", profile.target_role),
+        target_role=assessment.get("target_role", selected_role),
         overall_score=float(assessment.get("overall_score", 0)),
         readiness_level=str(assessment.get("readiness_level", "Unknown")),
         source_type="profile",
@@ -408,3 +420,20 @@ def get_assessment_benchmark(
         ),
         market_remote_percentage=float(role_details.get("remote_percentage", 0.0)),
     )
+
+
+@router.get("/{assessment_id}", response_model=AssessmentResponse)
+def get_assessment_by_id(
+    assessment_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> AssessmentResponse:
+    row = (
+        db.query(Assessment)
+        .filter(Assessment.id == assessment_id, Assessment.user_id == current_user.id)
+        .first()
+    )
+    if not row:
+        raise HTTPException(status_code=404, detail="Assessment not found")
+
+    return _to_response(row)

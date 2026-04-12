@@ -70,5 +70,17 @@ class MLServiceClient:
             json=payload,
             timeout=60,
         )
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except requests.HTTPError as exc:
+            if response.status_code < 500:
+                detail = "Invalid profile assessment request"
+                try:
+                    error_payload = response.json()
+                    detail = str(error_payload.get("detail") or detail)
+                except ValueError:
+                    if response.text:
+                        detail = response.text.strip()
+                raise ValueError(detail) from exc
+            raise
         return response.json()

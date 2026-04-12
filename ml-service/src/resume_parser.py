@@ -129,6 +129,35 @@ class ResumeParser:
 
         return section_hits
 
+    @staticmethod
+    def _extract_section_text(resume_text, section_headers):
+        lines = resume_text.splitlines()
+        collected = []
+        capture = False
+
+        stop_headers = [
+            "experience", "education", "projects", "certifications", "skills", "summary",
+            "achievements", "publications", "activities", "leadership",
+        ]
+
+        for raw_line in lines:
+            line = raw_line.strip()
+            lowered = line.lower()
+            if not line:
+                continue
+
+            if any(header in lowered for header in section_headers):
+                capture = True
+                continue
+
+            if capture and any(header in lowered for header in stop_headers):
+                break
+
+            if capture:
+                collected.append(line)
+
+        return "\n".join(collected)
+
     def _canonicalize_skills(self, skills):
         canonical = set()
         for skill in skills:
@@ -166,6 +195,70 @@ class ResumeParser:
         estimated = min(6, heading_bonus + max(0, project_signals // 2))
         return int(estimated)
 
+    def _estimate_project_quality_score(self, resume_text):
+        project_text = self._extract_section_text(resume_text, ["project", "projects"])
+        text = (project_text or resume_text).lower()
+
+        action_hits = len(
+            re.findall(
+                r"\b(built|developed|implemented|designed|deployed|optimized|improved|created|engineered|led|integrated)\b",
+                text,
+            )
+        )
+        impact_hits = len(
+            re.findall(
+                r"(\b\d+(?:\.\d+)?%\b|\b\d+(?:\.\d+)?x\b|\b\d+[kKmM]?\+?\s*(?:users|requests|downloads|transactions)\b)",
+                text,
+            )
+        )
+        production_hits = len(
+            re.findall(
+                r"\b(deployed|production|scalable|monitoring|ci/cd|pipeline|kubernetes|docker|aws|azure|gcp)\b",
+                text,
+            )
+        )
+
+        action_score = min(1.0, action_hits / 6.0)
+        impact_score = min(1.0, impact_hits / 3.0)
+        production_score = min(1.0, production_hits / 3.0)
+
+        quality = (0.45 * action_score) + (0.35 * impact_score) + (0.20 * production_score)
+        return round(min(1.0, max(0.0, quality)), 4)
+
+    def _estimate_project_relevance_score(self, resume_text, target_role):
+        role_data = self.assessor.market_profile.get(target_role, {})
+        required = {
+            self.assessor._normalize_skill(skill)
+            for skill in role_data.get("top_required_skills", [])
+            if str(skill).strip()
+        }
+        preferred = {
+            self.assessor._normalize_skill(skill)
+            for skill in role_data.get("top_preferred_skills", [])
+            if str(skill).strip()
+        }
+
+        project_text = self._extract_section_text(resume_text, ["project", "projects"]) or resume_text
+        normalized_project_text = self._normalize_text(project_text)
+
+        found_skills = set()
+        for skill in self.skill_vocabulary:
+            normalized_skill = self.assessor._normalize_skill(skill)
+            if re.search(r"\b" + re.escape(skill) + r"\b", normalized_project_text):
+                found_skills.add(normalized_skill)
+
+        required_hits = len(required.intersection(found_skills))
+        preferred_hits = len(preferred.intersection(found_skills))
+
+        required_denominator = max(1, min(8, len(required)))
+        preferred_denominator = max(1, min(8, len(preferred)))
+
+        required_ratio = required_hits / required_denominator
+        preferred_ratio = preferred_hits / preferred_denominator
+
+        relevance = (0.75 * required_ratio) + (0.25 * preferred_ratio)
+        return round(min(1.0, max(0.0, relevance)), 4)
+
     @staticmethod
     def _extract_candidate_years(resume_text):
         text = resume_text.lower()
@@ -192,13 +285,50 @@ class ResumeParser:
     @staticmethod
     def _extract_experience_type(resume_text):
         text = resume_text.lower()
-        if "internship" in text or "intern " in text:
+
+        internship_hits = len(
+            re.findall(
+                r"\b(internship|intern|summer analyst|co-op|coop|trainee|apprentice|externship|fellowship)\b",
+                text,
+            )
+        )
+        research_hits = len(
+            re.findall(
+                r"\b(research assistant|research intern|research engineer|undergraduate researcher|graduate researcher|lab assistant)\b",
+                text,
+            )
+        )
+        part_time_hits = len(
+            re.findall(r"\b(part[- ]time|contract|freelance)\b", text)
+        )
+
+        full_time_role_hits = len(
+            re.findall(
+                r"\b(software engineer|backend engineer|frontend engineer|full stack developer|data engineer|data analyst|machine learning engineer|devops engineer)\b",
+                text,
+            )
+        )
+        full_time_marker_hits = len(re.findall(r"\b(full[- ]time|permanent role)\b", text))
+
+        # Heuristic role-history signal: lines with date ranges + professional role titles.
+        role_history_hits = len(
+            re.findall(
+                r"((20\d{2}|19\d{2}).{0,20}(present|current|20\d{2}|19\d{2})).{0,80}(engineer|developer|analyst|scientist)",
+                text,
+            )
+        )
+
+        full_time_hits = full_time_marker_hits + full_time_role_hits + role_history_hits
+
+        if full_time_hits >= 2:
+            return "full-time"
+        if internship_hits >= 1:
             return "internship"
-        if "research" in text or "research assistant" in text:
+        if research_hits >= 1:
             return "research"
-        if "part-time" in text or "part time" in text:
+        if part_time_hits >= 1:
             return "part-time"
-        if "full-time" in text or "full time" in text:
+        if full_time_hits == 1:
             return "full-time"
         return "none"
 
@@ -235,13 +365,22 @@ class ResumeParser:
 
     def parse_and_assess(self, pdf_path, target_role):
         profile = self.parse_resume(pdf_path)
+        resume_text = self.extract_text_from_pdf(pdf_path)
+        project_quality_score = self._estimate_project_quality_score(resume_text)
+        project_relevance_score = self._estimate_project_relevance_score(resume_text, target_role)
+
         assessment = self.assessor.assess(
             target_role=target_role,
             candidate_skills=profile["skills"],
             candidate_years=profile["candidate_years"],
             projects_count=profile["projects_count"],
             experience_type=profile["experience_type"],
+            project_quality_score=project_quality_score,
+            project_relevance_score=project_relevance_score,
         )
+
+        profile["project_quality_score"] = project_quality_score
+        profile["project_relevance_score"] = project_relevance_score
         return {
             "profile": profile,
             "assessment": assessment,
