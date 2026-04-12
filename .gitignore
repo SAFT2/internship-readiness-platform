@@ -14,3 +14,15 @@ ml-service/data/processed/*.csv
 ml-service/data/models/
 ml-service/data/raw/*.csv
 ml-service/data/processed/*.json
+
+# Local environments and secrets
+.env
+**/.env
+.venv/
+venv/
+**/.venv/
+**/venv/
+
+# Local databases and test caches
+*.db
+**/.pytest_cache/
