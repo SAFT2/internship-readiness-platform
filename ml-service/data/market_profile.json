@@ -1,0 +1,227 @@
+{
+  "ML Intern": {
+    "total_postings": 100,
+    "top_required_skills": ["python", "pytorch", "sql", "git"],
+    "required_skill_frequency": {
+      "python": 80,
+      "pytorch": 55,
+      "sql": 50,
+      "git": 45,
+      "machine learning": 60
+    },
+    "top_preferred_skills": ["tensorflow", "docker", "kubernetes"],
+    "preferred_skill_frequency": {
+      "tensorflow": 30,
+      "docker": 20,
+      "kubernetes": 10
+    },
+    "experience": {
+      "average_years": 0.5,
+      "new_grad_friendly_percentage": 85.0,
+      "distribution": {
+        "Entry (0 years)": 60,
+        "Junior (0-1 years)": 40
+      }
+    },
+    "education_requirements": {
+      "Bachelors": 70,
+      "Masters": 20
+    },
+    "top_locations": {
+      "CA": 30,
+      "NY": 20
+    },
+    "remote_percentage": 40.0,
+    "sample_job_titles": ["Machine Learning Intern", "AI Intern"]
+  },
+  "Data Science Intern": {
+    "total_postings": 92,
+    "top_required_skills": ["python", "sql", "pandas", "statistics", "machine learning"],
+    "required_skill_frequency": {
+      "python": 75,
+      "sql": 70,
+      "pandas": 62,
+      "statistics": 56,
+      "machine learning": 48,
+      "data visualization": 40
+    },
+    "top_preferred_skills": ["scikit-learn", "tableau", "power bi", "airflow"],
+    "preferred_skill_frequency": {
+      "scikit-learn": 36,
+      "tableau": 28,
+      "power bi": 20,
+      "airflow": 12
+    },
+    "experience": {
+      "average_years": 0.6,
+      "new_grad_friendly_percentage": 82.0,
+      "distribution": {
+        "Entry (0 years)": 58,
+        "Junior (0-1 years)": 42
+      }
+    },
+    "education_requirements": {
+      "Bachelors": 74,
+      "Masters": 16
+    },
+    "top_locations": {
+      "CA": 24,
+      "NY": 18,
+      "TX": 12
+    },
+    "remote_percentage": 38.0,
+    "sample_job_titles": ["Data Science Intern", "Data Analyst Intern"]
+  },
+  "Software Engineering Intern": {
+    "total_postings": 140,
+    "top_required_skills": ["python", "java", "javascript", "git", "data structures"],
+    "required_skill_frequency": {
+      "python": 64,
+      "java": 58,
+      "javascript": 54,
+      "git": 78,
+      "data structures": 72,
+      "algorithms": 68
+    },
+    "top_preferred_skills": ["react", "nodejs", "docker", "aws"],
+    "preferred_skill_frequency": {
+      "react": 30,
+      "nodejs": 24,
+      "docker": 22,
+      "aws": 18
+    },
+    "experience": {
+      "average_years": 0.7,
+      "new_grad_friendly_percentage": 76.0,
+      "distribution": {
+        "Entry (0 years)": 50,
+        "Junior (0-1 years)": 50
+      }
+    },
+    "education_requirements": {
+      "Bachelors": 80,
+      "Masters": 10
+    },
+    "top_locations": {
+      "CA": 35,
+      "WA": 14,
+      "NY": 12
+    },
+    "remote_percentage": 33.0,
+    "sample_job_titles": ["Software Engineering Intern", "SWE Intern"]
+  },
+  "Backend Intern": {
+    "total_postings": 86,
+    "top_required_skills": ["python", "java", "sql", "apis", "git"],
+    "required_skill_frequency": {
+      "python": 58,
+      "java": 44,
+      "sql": 66,
+      "apis": 52,
+      "git": 60,
+      "databases": 46
+    },
+    "top_preferred_skills": ["docker", "kubernetes", "redis", "aws"],
+    "preferred_skill_frequency": {
+      "docker": 27,
+      "kubernetes": 18,
+      "redis": 16,
+      "aws": 22
+    },
+    "experience": {
+      "average_years": 0.7,
+      "new_grad_friendly_percentage": 72.0,
+      "distribution": {
+        "Entry (0 years)": 46,
+        "Junior (0-1 years)": 54
+      }
+    },
+    "education_requirements": {
+      "Bachelors": 78,
+      "Masters": 8
+    },
+    "top_locations": {
+      "CA": 20,
+      "TX": 16,
+      "NY": 11
+    },
+    "remote_percentage": 31.0,
+    "sample_job_titles": ["Backend Intern", "API Engineer Intern"]
+  },
+  "Frontend Intern": {
+    "total_postings": 74,
+    "top_required_skills": ["javascript", "typescript", "react", "html", "css"],
+    "required_skill_frequency": {
+      "javascript": 62,
+      "typescript": 40,
+      "react": 58,
+      "html": 68,
+      "css": 66,
+      "git": 44
+    },
+    "top_preferred_skills": ["nextjs", "figma", "testing", "nodejs"],
+    "preferred_skill_frequency": {
+      "nextjs": 20,
+      "figma": 15,
+      "testing": 18,
+      "nodejs": 16
+    },
+    "experience": {
+      "average_years": 0.5,
+      "new_grad_friendly_percentage": 80.0,
+      "distribution": {
+        "Entry (0 years)": 55,
+        "Junior (0-1 years)": 45
+      }
+    },
+    "education_requirements": {
+      "Bachelors": 72,
+      "Masters": 6
+    },
+    "top_locations": {
+      "CA": 18,
+      "NY": 14,
+      "MA": 9
+    },
+    "remote_percentage": 42.0,
+    "sample_job_titles": ["Frontend Intern", "Web Developer Intern"]
+  },
+  "DevOps Intern": {
+    "total_postings": 48,
+    "top_required_skills": ["linux", "docker", "python", "ci/cd", "git"],
+    "required_skill_frequency": {
+      "linux": 38,
+      "docker": 36,
+      "python": 28,
+      "ci/cd": 30,
+      "git": 34,
+      "cloud": 24
+    },
+    "top_preferred_skills": ["kubernetes", "aws", "terraform", "monitoring"],
+    "preferred_skill_frequency": {
+      "kubernetes": 20,
+      "aws": 18,
+      "terraform": 12,
+      "monitoring": 10
+    },
+    "experience": {
+      "average_years": 0.8,
+      "new_grad_friendly_percentage": 68.0,
+      "distribution": {
+        "Entry (0 years)": 42,
+        "Junior (0-1 years)": 58
+      }
+    },
+    "education_requirements": {
+      "Bachelors": 76,
+      "Masters": 8
+    },
+    "top_locations": {
+      "CA": 12,
+      "TX": 10,
+      "WA": 8
+    },
+    "remote_percentage": 45.0,
+    "sample_job_titles": ["DevOps Intern", "Cloud Ops Intern"]
+  }
+}
