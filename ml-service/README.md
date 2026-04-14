@@ -162,6 +162,21 @@ Endpoints:
     - `role` (optional, e.g. `ML Intern`)
     - `profile_path` (optional path to `market_profile.json`)
 
+## Deploy (Render Free)
+
+Service settings:
+
+- Root Directory: `ml-service`
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `cd src && uvicorn api:app --host 0.0.0.0 --port $PORT`
+- Health Check Path: `/health`
+
+After deploy, copy the public URL and set backend `ML_SERVICE_URL` to:
+
+```bash
+https://<your-ml-service>.onrender.com
+```
+
 ## Scraping notes
 
 Run:
