@@ -1,4 +1,6 @@
 data/
+!ml-service/data/
+!ml-service/data/market_profile.json
 ml-service/src/scrapers/__pycache__/
 
 # Python cache and compiled files
