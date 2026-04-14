@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Upload } from "lucide-react";
 
 export function HeroSection() {
   return (
@@ -15,11 +14,8 @@ export function HeroSection() {
           skill gaps and get personalized recommendations to land your ideal role.
         </p>
         <div className="hero-actions">
-          <Link to="/upload" className="btn btn-primary upload-cta">
-            <span className="btn-icon" aria-hidden="true">
-              <Upload size={16} />
-            </span>
-            Upload Resume
+          <Link to="/upload" className="btn btn-primary">
+            <span className="btn-icon">^</span> Upload Resume
           </Link>
           <Link to="/dashboard" className="btn btn-outline">
             View Demo Dashboard {"->"}

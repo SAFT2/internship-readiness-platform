@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { BarChart3, Shield, Upload, WandSparkles } from "lucide-react";
 import { api, getErrorMessage } from "../lib/api";
 import { Footer } from "../components/Footer";
 import { useToast } from "../lib/useToast";
@@ -160,9 +159,7 @@ export function UploadPage() {
                   }
                 }}
               >
-                <div className="drop-icon" aria-hidden="true">
-                  <Upload size={28} />
-                </div>
+                <div className="drop-icon">UP</div>
                 <p className="drop-title">Drag and drop your PDF</p>
                 <p className="drop-sub">Max file size 5MB. PDF format only.</p>
                 <label className="browse-link">
@@ -222,22 +219,12 @@ export function UploadPage() {
               {roleDetailsLoading && <p className="muted-text">Loading role details...</p>}
 
               <ul className="upload-benefits">
-                <li>
-                  <Shield size={18} />
-                  Secure AI Processing
-                </li>
-                <li>
-                  <BarChart3 size={18} />
-                  Industry Benchmark Comparison
-                </li>
+                <li>Secure AI Processing</li>
+                <li>Industry Benchmark Comparison</li>
               </ul>
 
               <button type="submit" className="btn btn-primary wide upload-analyze" disabled={loading || !file || !role}>
-                {loading ? "Analyzing Resume..." : (
-                  <>
-                    <WandSparkles size={16} /> Analyze Resume
-                  </>
-                )}
+                {loading ? "Analyzing Resume..." : "Analyze Resume"}
               </button>
 
               <button type="button" className="btn btn-outline wide" onClick={assessFromProfile} disabled={profileAssessing}>
