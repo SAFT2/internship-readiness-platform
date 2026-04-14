@@ -1,6 +1,7 @@
 import json
 from hashlib import sha256
 
+import requests
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from sqlalchemy.orm import Session
 
@@ -66,10 +67,12 @@ def get_role_details(role_name: str) -> RoleDetailsResponse:
     client = MLServiceClient()
     try:
         payload = client.get_role_details(role_name=role_name)
-    except Exception as exc:
-        detail = str(exc)
-        if "404" in detail:
+    except requests.HTTPError as exc:
+        status_code = exc.response.status_code if exc.response is not None else None
+        if status_code == 404:
             raise HTTPException(status_code=404, detail=f"Unknown role '{role_name}'") from exc
+        raise HTTPException(status_code=502, detail=f"ML service request failed: {exc}") from exc
+    except Exception as exc:
         raise HTTPException(status_code=502, detail=f"ML service request failed: {exc}") from exc
 
     return RoleDetailsResponse(

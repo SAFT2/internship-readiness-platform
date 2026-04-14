@@ -150,6 +150,12 @@ a {
   color: #fff;
 }
 
+.upload-cta {
+  border-radius: 999px;
+  padding: 12px 22px;
+  box-shadow: 0 12px 20px rgba(21, 61, 158, 0.18);
+}
+
 .btn-primary:hover {
   background: var(--primary-strong);
 }
@@ -355,6 +361,77 @@ a {
   font-weight: 700;
 }
 
+.process-section {
+  background: #f4f6fb;
+}
+
+.process-heading {
+  margin-bottom: 34px;
+}
+
+.steps-wrapper {
+  position: relative;
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+.connecting-line {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  top: 52px;
+  border-top: 2px dashed #d9dfeb;
+  z-index: 1;
+}
+
+.process-step-grid {
+  position: relative;
+  z-index: 2;
+}
+
+.process-step-card {
+  text-align: center;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0 8px;
+}
+
+.step-icon-box {
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 20px;
+  border-radius: 22px;
+  background: #0f56c7;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.process-step-card .step-badge {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  width: 32px;
+  height: 32px;
+  font-size: 0.82rem;
+  background: #0f6a57;
+  border: 2px solid #f4f6fb;
+}
+
+.process-step-card h3 {
+  margin: 0;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.process-step-card p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 1.03rem;
+}
+
 .upload-wrap {
   display: grid;
   gap: 16px;
@@ -385,8 +462,8 @@ a {
 
 .dropzone {
   border: 2px dashed #d8deea;
-  border-radius: 14px;
-  padding: 42px 22px;
+  border-radius: 22px;
+  padding: 62px 28px;
   text-align: center;
   background: #f6f8fc;
 }
@@ -398,28 +475,26 @@ a {
 
 .drop-title {
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.4rem;
   line-height: 1.1;
 }
 
 .drop-sub {
   margin: 10px 0;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 1.2rem;
 }
 
 .drop-icon {
-  width: 54px;
-  height: 54px;
-  margin: 0 auto 16px;
-  border-radius: 14px;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 22px;
+  border-radius: 18px;
   background: #e7edfb;
   color: var(--primary);
-  font-size: 0.85rem;
-  font-weight: 800;
+  font-size: 1.2rem;
   display: grid;
   place-items: center;
-  letter-spacing: 0.08em;
 }
 
 .browse-link {
@@ -463,10 +538,12 @@ a {
 }
 
 .role-select {
-  border: 2px solid var(--primary);
-  background: #f8fbff;
+  border: 2px solid #4d5b72;
+  background: #f2f4f8;
   border-radius: 16px;
-  font-size: 1rem;
+  font-size: 1.2rem;
+  color: #4f5d75;
+  min-height: 54px;
 }
 
 .role-meta {
@@ -484,26 +561,29 @@ a {
 }
 
 .upload-benefits li {
-  position: relative;
-  padding-left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 0;
   color: #2c3a50;
   font-weight: 600;
+  font-size: 1.3rem;
 }
 
 .upload-benefits li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 7px;
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--primary);
+  content: none;
 }
 
 .upload-analyze {
-  margin-top: 4px;
+  margin-top: 8px;
   border-radius: 999px;
+  min-height: 58px;
+  font-size: 1.08rem;
+}
+
+.upload-analyze svg,
+.upload-benefits svg {
+  flex-shrink: 0;
 }
 
 label {
@@ -601,16 +681,18 @@ a:focus-visible {
   background: linear-gradient(135deg, #2352bb 0%, #1f5acb 100%);
   color: #fff;
   border-radius: 14px;
-  padding: 16px;
+  padding: 20px;
 }
 
 .tip-box h4 {
   margin: 0;
+  font-size: 1.35rem;
 }
 
 .tip-box p {
   margin: 8px 0 0;
   color: rgba(255, 255, 255, 0.9);
+  font-size: 1.02rem;
 }
 
 .dashboard-header,
@@ -1437,6 +1519,31 @@ th {
 
   .drop-title {
     font-size: 1.7rem;
+  }
+
+  .drop-sub {
+    font-size: 1rem;
+  }
+
+  .role-select {
+    font-size: 1rem;
+    min-height: 46px;
+  }
+
+  .upload-benefits li {
+    font-size: 1rem;
+  }
+
+  .process-step-card h3 {
+    font-size: 1.4rem;
+  }
+
+  .process-step-card p {
+    font-size: 0.95rem;
+  }
+
+  .connecting-line {
+    display: none;
   }
 
   .recommendation-card {
